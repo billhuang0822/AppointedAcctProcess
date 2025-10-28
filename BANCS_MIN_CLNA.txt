@@ -1,0 +1,13 @@
+create table BANCS_MIN_CLNA {
+	clna_cust_id_no varchar2(11) not null,
+	clna_bsb_no	 varchar2(3) not null,	
+	clna_acct_no varchar2(16) not null,
+	clna_system varchar2(3) not null,
+	clna_status char(1) not null,
+	clna_last_maint_date varchar2(8) not null,
+	clna_last_maint_branch varchar2(4) not null,
+	clna_last_maint_maint_teller varchar2(5) not null,
+	clna_nom_acct_type char(1) not null,
+	transfer_note varchar2(80) not null,
+	issync char(1) default 'N' not null
+}

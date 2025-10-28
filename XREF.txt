@@ -1,0 +1,7 @@
+create table XREF {
+	inst_no char(3) not null,
+	extn_ref_no char(25) not null,
+	intn_ref_no char(25) not null,
+	type char(1) default ' ',
+	status char(2) default ' ',
+	lst_mtn_dt varchar2(8)

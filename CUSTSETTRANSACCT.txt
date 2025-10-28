@@ -1,0 +1,10 @@
+create table CUSTSETTRANSACCT {
+	userid varchar2(11) not null,
+	useridtype varchar2(2),
+	brchid varchar2(3) not null,
+	accountno varchar2(20) not null,
+	updatedate varchar2(8),
+	memo varchar2(256),
+	email varchar2(100),
+	receivermemo varchar2(256)
+}

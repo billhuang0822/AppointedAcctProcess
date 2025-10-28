@@ -1,0 +1,11 @@
+create table FREQUENCYACCOUNT {
+	seq_no varchar2(11) not null,
+	userid varchar2(20),
+	brchid varchar2(4),
+	accountno varchar2(20),
+	memo varchar2(256),
+	email varchar2(100),
+	updatedate varchar2(8),
+	receivermemo varchar2(410),
+	icaccountno varchar2(20)
+}

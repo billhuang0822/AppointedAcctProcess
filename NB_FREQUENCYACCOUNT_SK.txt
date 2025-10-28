@@ -1,0 +1,9 @@
+create table NB_FREQUENCYACCOUNT_SK {
+	userid					varchar2(20) not null,
+	brchid					varchar2(4) not null,
+	accountno				varchar2(20) not null,
+	memo					varchar2(256) not null,
+	email					varchar2(100),
+	is_appointed_account	varchar2(1) not null,
+	updatedate 				varchar2(8) not null
+}
