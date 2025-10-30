@@ -2,5 +2,6 @@ create table BANCS_SK_CUST_INFO {
 	cust_no char(16) not null,
 	sk_cust_id char(11) not null,
 	ts_cust_id char(11) not null,
-	cust_re_no_flag char(1)	
+	cust_re_no_flag char(1),
+	cust_id_type char(2)
 }
