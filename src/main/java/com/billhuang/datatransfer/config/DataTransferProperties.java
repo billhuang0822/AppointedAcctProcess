@@ -48,6 +48,14 @@ public class DataTransferProperties {
     private String insertOneCols = "userid,useridtype,brchid,accountno,updatedate,memo,email,receivermemo";
     private String insertOneFrom = "ts_cust_id,cust_id_type,CLNA_BSB_USED,CLNA_ACCT_USED,clna_last_maint_date,transfer_note,NULL,NULL";
 
+    
+     // if true use CTAS + attempt to recreate indexes/constraints using DBMS_METADATA
+    private boolean prepareTestDataCopy = true;
+    // when copying data, limit rows copied (0 = no data copy)
+    private int dataCopyLimit = 500;
+
+    
+
     // getters / setters
 
     public int getBatchSize() { return batchSize; }
@@ -136,4 +144,11 @@ public class DataTransferProperties {
 
     public String getInsertOneFrom() { return insertOneFrom; }
     public void setInsertOneFrom(String insertOneFrom) { this.insertOneFrom = insertOneFrom; }
+    
+    public boolean isPrepareTestDataCopy() { return prepareTestDataCopy; }
+    public void setPrepareTestDataCopy(boolean prepareTestDataCopy) { this.prepareTestDataCopy = prepareTestDataCopy; }
+
+    public int getDataCopyLimit() { return dataCopyLimit; }
+    public void setDataCopyLimit(int dataCopyLimit) { this.dataCopyLimit = dataCopyLimit; }
+
 }
