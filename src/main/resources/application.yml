@@ -1,14 +1,19 @@
 datatransfer:
-  batch-size: 500
-  fetch-size: 1000
-  xref-replace-bsb: "812"
-  update-issync-after-insert: false
-  prepare-test-data: false   # UT: set true to create test tables and remap target table names
   source-table: BANCS_MIN_CLNA
-  lookup-table: BANCS_SK_CUST_INFO
-  xref-table: XREF
-  target-zero: TRANSFERACCOUNT
-  target-one: CUSTSETTRANSACCT
+  target-tables:
+    - TRANSFERACCOUNT
+    - CUSTSETTRANSACCT
+  column-mapping:
+    TRANSFERACCOUNT: "userid,brchid,accountno,updatedate -> ts_cust_id,CLNA_BSB_USED,CLNA_ACCT_USED,clna_last_maint_date"
+    CUSTSETTRANSACCT: "userid,useridtype,brchid,accountno,updatedate -> ts_cust_id,cust_id_type,CLNA_BSB_USED,CLNA_ACCT_USED,clna_last_maint_date"
+
+testtable:
+  prepare-test-data: true
+  data-copy-limit: 50
+  tables-to-copy:
+    - TRANSFERACCOUNT
+    - CUSTSETTRANSACCT
+  test-table-suffix: "_TEST"
 
 # Datasource definitions should go here (example placeholders)
 # main datasource and lookup datasource can point to same DB or different ones.

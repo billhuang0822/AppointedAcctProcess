@@ -2,34 +2,23 @@ package com.tsb.dataimport;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.util.List;
+import java.util.Map;
 
 @ConfigurationProperties(prefix = "datatransfer")
 public class DataTransferProperties {
+    /** 來源表 */
+    private String sourceTable;
+    /** 目標表清單 */
+    private List<String> targetTables;
+    /** 各 table 對應的欄位 mapping 設定 */
+    private Map<String, String> columnMapping;
 
-    private int batchSize = 500;
-    private int fetchSize = 1000;
-    private int pageSize = 10000;
-    private String xrefReplaceBsb = "812";
-    private boolean updateIssyncAfterInsert = false;
-    private boolean prepareTestData = false;
+    public String getSourceTable() { return sourceTable; }
+    public void setSourceTable(String sourceTable) { this.sourceTable = sourceTable; }
 
-    // 新增：要複製的表清單
-    private List<String> tablesToCopy;
+    public List<String> getTargetTables() { return targetTables; }
+    public void setTargetTables(List<String> targetTables) { this.targetTables = targetTables; }
 
-    // 新增：測試表後綴
-    private String testTableSuffix = "_TEST";
-
-    // 其他原有欄位（略，請保留你的原本設定）
-
-    private boolean prepareTestDataCopy = true;
-    private int dataCopyLimit = 500;
-
-    // getters / setters 只列出新增部分
-    public List<String> getTablesToCopy() { return tablesToCopy; }
-    public void setTablesToCopy(List<String> tablesToCopy) { this.tablesToCopy = tablesToCopy; }
-
-    public String getTestTableSuffix() { return testTableSuffix; }
-    public void setTestTableSuffix(String testTableSuffix) { this.testTableSuffix = testTableSuffix; }
-
-    // ... 其他 getters/setters 請保留
+    public Map<String, String> getColumnMapping() { return columnMapping; }
+    public void setColumnMapping(Map<String, String> columnMapping) { this.columnMapping = columnMapping; }
 }

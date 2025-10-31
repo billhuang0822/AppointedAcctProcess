@@ -5,8 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import com.tsb.dataimport.DataTransferProperties;
-
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.List;
@@ -20,11 +18,11 @@ public class TestDataPreparator {
     private static final Logger logger = LoggerFactory.getLogger(TestDataPreparator.class);
 
     private final DataSource mainDs;
-    private final DataTransferProperties props;
+    private final TestTableProperties props;
 
     public TestDataPreparator(
             @Qualifier("mainDataSource") DataSource mainDs,
-            DataTransferProperties props) {
+            TestTableProperties props) {
         this.mainDs = mainDs;
         this.props = props;
     }
@@ -54,13 +52,11 @@ public class TestDataPreparator {
         }
     }
 
-    /** 取得目前使用的 schema 名稱 */
     private String getSchema(Connection conn) throws SQLException {
         String schema = conn.getMetaData().getUserName();
         return schema == null ? "" : schema.toUpperCase();
     }
 
-    /** 複製一個 table 結構與資料到 *_TEST，若已存在先刪除 */
     private void copyTableWithData(Connection conn, String schema, String srcTable, String suffix) throws SQLException {
         String destTable = normalizeTestName(srcTable + suffix, suffix);
 
@@ -71,7 +67,6 @@ public class TestDataPreparator {
         copyTableRows(conn, srcTable, destTable, props.getDataCopyLimit());
     }
 
-    /** 若 destTable 存在則先 drop 掉 */
     private void dropIfExists(Connection conn, String schema, String table) throws SQLException {
         if (tableExists(conn, schema, table)) {
             String sql = "DROP TABLE " + table + " PURGE";
@@ -82,7 +77,6 @@ public class TestDataPreparator {
         }
     }
 
-    /** 以 CTAS 建立空的資料表 */
     private void createEmptyCopy(Connection conn, String srcTable, String destTable) throws SQLException {
         String sql = "CREATE TABLE " + destTable + " AS SELECT * FROM " + srcTable + " WHERE 1=0";
         try (Statement s = conn.createStatement()) {
@@ -91,20 +85,18 @@ public class TestDataPreparator {
         }
     }
 
-    /** 複製 index */
     private void copyIndexes(Connection conn, String schema, String srcTable, String destTable) {
         String sql = "SELECT DBMS_LOB.SUBSTR(DBMS_METADATA.GET_DEPENDENT_DDL('INDEX', ?, ?), 32767, 1) AS DDL FROM DUAL";
         copyDependentDdl(conn, sql, schema, srcTable, destTable, "INDEX");
     }
 
-    /** 複製 constraint */
     private void copyConstraints(Connection conn, String schema, String srcTable, String destTable) {
         String sql = "SELECT DBMS_LOB.SUBSTR(DBMS_METADATA.GET_DEPENDENT_DDL('CONSTRAINT', ?, ?), 32767, 1) AS DDL FROM DUAL";
         copyDependentDdl(conn, sql, schema, srcTable, destTable, "CONSTRAINT");
     }
 
-    /** 執行 DBMS_METADATA 產生的 DDL 並替換 table/名稱 */
     private void copyDependentDdl(Connection conn, String sql, String schema, String srcTable, String destTable, String type) {
+        String suffix = props.getTestTableSuffix();
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, srcTable.toUpperCase());
             ps.setString(2, schema);
@@ -116,8 +108,8 @@ public class TestDataPreparator {
                             String modStmt = stmt
                                     .replaceAll("(?i)\"" + srcTable + "\"", "\"" + destTable + "\"")
                                     .replaceAll("(?i)\\b" + srcTable + "\\b", destTable)
-                                    .replaceAll("(?i)(CREATE\\s+" + type + "\\s+)(\\w+)", "$1$2" + "_TEST")
-                                    .replaceAll("(?i)(CONSTRAINT\\s+)(\\w+)", "$1$2" + "_TEST");
+                                    .replaceAll("(?i)(CREATE\\s+" + type + "\\s+)(\\w+)", "$1$2" + suffix)
+                                    .replaceAll("(?i)(CONSTRAINT\\s+)(\\w+)", "$1$2" + suffix);
                             if (!modStmt.isBlank()) {
                                 try (Statement s = conn.createStatement()) {
                                     s.execute(modStmt);
@@ -134,7 +126,6 @@ public class TestDataPreparator {
         }
     }
 
-    /** 複製資料 */
     private void copyTableRows(Connection conn, String srcTable, String destTable, int limit) {
         if (limit <= 0) return;
         String sql = String.format("INSERT INTO %s SELECT * FROM %s WHERE ROWNUM <= %d", destTable, srcTable, limit);
@@ -146,7 +137,6 @@ public class TestDataPreparator {
         }
     }
 
-    /** 判斷 table 是否存在 */
     private boolean tableExists(Connection conn, String schema, String table) throws SQLException {
         String sql = "SELECT COUNT(*) FROM ALL_TABLES WHERE OWNER = ? AND TABLE_NAME = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -158,7 +148,6 @@ public class TestDataPreparator {
         }
     }
 
-    /** 防止 _TEST_TEST */
     private String normalizeTestName(String name, String suffix) {
         if (name == null) return null;
         return name.replaceAll("(" + suffix + ")+$", suffix);
