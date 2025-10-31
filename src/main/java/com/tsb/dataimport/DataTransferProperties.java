@@ -1,4 +1,4 @@
-package com.billhuang.datatransfer.config;
+package com.tsb.dataimport;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -8,6 +8,7 @@ public class DataTransferProperties {
     // datasources are injected in Spring config, not here
     private int batchSize = 500;
     private int fetchSize = 1000;
+    private int pageSize = 10000;
     private String xrefReplaceBsb = "812";
     private boolean updateIssyncAfterInsert = false;
     private boolean prepareTestData = false;
@@ -63,6 +64,10 @@ public class DataTransferProperties {
 
     public int getFetchSize() { return fetchSize; }
     public void setFetchSize(int fetchSize) { this.fetchSize = fetchSize; }
+    
+    public int getPageSize() { return pageSize; }
+    public void setPageSize(int pageSize) { this.pageSize = pageSize; }
+
 
     public String getXrefReplaceBsb() { return xrefReplaceBsb; }
     public void setXrefReplaceBsb(String xrefReplaceBsb) { this.xrefReplaceBsb = xrefReplaceBsb; }

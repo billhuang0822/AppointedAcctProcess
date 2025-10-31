@@ -1,4 +1,4 @@
-package com.billhuang.datatransfer.service;
+package com.tsb.dataimport;
 
 /**
  * MergeSqlBuilder - 建構 Oracle MERGE INTO SQL 模板。
