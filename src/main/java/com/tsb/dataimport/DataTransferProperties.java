@@ -2,16 +2,32 @@ package com.tsb.dataimport;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.util.List;
-import java.util.Map;
 
 @ConfigurationProperties(prefix = "datatransfer")
 public class DataTransferProperties {
-    /** 來源表 */
-    private String sourceTable;
-    /** 目標表清單（執行測試時會被 TestDataPreparator 動態更改為 *_TEST） */
+
+    // 分頁/批次等效能設定
+    private int batchSize = 500;
+    private int fetchSize = 1000;
+    private int pageSize = 1000;
+
+    // 來源表
+    private String sourceTable = "BANCS_MIN_CLNA";
+
+    // 目標表，支援多個（會自動覆蓋為 *_TEST 由 TestDataPreparator 控制）
     private List<String> targetTables;
-    /** 各 table 對應的欄位 mapping 設定 */
-    private Map<String, String> columnMapping;
+
+    
+    // === getter/setter ===
+
+    public int getBatchSize() { return batchSize; }
+    public void setBatchSize(int batchSize) { this.batchSize = batchSize; }
+
+    public int getFetchSize() { return fetchSize; }
+    public void setFetchSize(int fetchSize) { this.fetchSize = fetchSize; }
+
+    public int getPageSize() { return pageSize; }
+    public void setPageSize(int pageSize) { this.pageSize = pageSize; }
 
     public String getSourceTable() { return sourceTable; }
     public void setSourceTable(String sourceTable) { this.sourceTable = sourceTable; }
@@ -19,6 +35,4 @@ public class DataTransferProperties {
     public List<String> getTargetTables() { return targetTables; }
     public void setTargetTables(List<String> targetTables) { this.targetTables = targetTables; }
 
-    public Map<String, String> getColumnMapping() { return columnMapping; }
-    public void setColumnMapping(Map<String, String> columnMapping) { this.columnMapping = columnMapping; }
 }
