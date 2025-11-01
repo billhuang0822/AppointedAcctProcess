@@ -8,7 +8,7 @@ import java.util.Map;
 public class DataTransferProperties {
     /** 來源表 */
     private String sourceTable;
-    /** 目標表清單 */
+    /** 目標表清單（執行測試時會被 TestDataPreparator 動態更改為 *_TEST） */
     private List<String> targetTables;
     /** 各 table 對應的欄位 mapping 設定 */
     private Map<String, String> columnMapping;

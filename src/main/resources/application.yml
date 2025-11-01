@@ -3,9 +3,6 @@ datatransfer:
   target-tables:
     - TRANSFERACCOUNT
     - CUSTSETTRANSACCT
-  column-mapping:
-    TRANSFERACCOUNT: "userid,brchid,accountno,updatedate -> ts_cust_id,CLNA_BSB_USED,CLNA_ACCT_USED,clna_last_maint_date"
-    CUSTSETTRANSACCT: "userid,useridtype,brchid,accountno,updatedate -> ts_cust_id,cust_id_type,CLNA_BSB_USED,CLNA_ACCT_USED,clna_last_maint_date"
 
 testtable:
   prepare-test-data: true
